@@ -1,0 +1,25 @@
+
+.logo-img {
+    width: 200px;
+    height: 200px;
+}
+.logo-center {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    top: calc(50% - 100px);
+}
+.form-center {
+    width: 400px;
+    height: 400px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    top: calc(50% - 200px);
+}
+
+button[name="signup"] { margin-left: 5px; }
