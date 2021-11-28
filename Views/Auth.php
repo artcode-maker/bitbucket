@@ -34,6 +34,7 @@ if($_SERVER['REQUEST_METHOD'] === 'GET') {
     } else {
         if(!isset($_SESSION['is_authorized']) | !$_SESSION['is_authorized']) {
             $_SESSION['is_authorized'] = true;
+            $_SESSION['authorized_id'] = $foundUser['Id'];
         }
         echo json_encode(array("Status" => "Account was found", "auth" => $_SESSION['is_authorized'] ));
     }

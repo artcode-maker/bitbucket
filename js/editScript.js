@@ -14,15 +14,17 @@ async function postData(url = "", data = {}) {
     return await response.text();
 }
 
-async function buttonClickAuth(e) {
+async function buttonClickEdit(e) {
     e.preventDefault();
     let elem, spinner, query;
-    query = "/Views/Auth.php";
     elem = document.querySelector("div[class='logo-center']");
-    spinner = document.querySelector("#tmplSpinner");  
+    spinner = document.querySelector("#tmplSpinner");    
+    query = "/Views/Edit.php";
     let sendData = {};
     sendData.inputLogin = document.querySelector("input[name='inputLogin']").value;
     sendData.inputPassword = document.querySelector("input[name='inputPassword']").value;
+    sendData.inputEmail = document.querySelector("input[name='inputEmail']").value;
+    sendData.inputName = document.querySelector("input[name='inputName']").value;
 
     if(elem !== null) {
         elem.innerHTML = spinner.innerHTML;
@@ -34,30 +36,13 @@ async function buttonClickAuth(e) {
 
     postData(document.location.origin + query, sendData)
         .then((data) => {
-            let jsonData = JSON.parse(data);
             let result = document.querySelector("div[class='logo-center']");
             if(result !== null) {
-                result.innerHTML = jsonData['Status'];
-                if(jsonData['auth'] == true) {
-                    buttonLogout = document.querySelector("nav form button[name='signin']");
-                    buttonLogout.innerText  = "Log out";
-                    buttonLogout.setAttribute("name", "logout");
-                    buttonEdit = document.querySelector("nav form button[name='signup']");
-                    buttonEdit.innerText  = "Edit";
-                    buttonEdit.setAttribute("name", "edit");
-                }
+                result.innerHTML = data;
                 result.className = "form-center";
             } else {
                 result = document.querySelector("div[class='form-center']");
-                result.innerHTML = jsonData['Status'];
-                if(jsonData['auth'] == true) {
-                    buttonLogout = document.querySelector("nav form button[name='signin']");
-                    buttonLogout.innerText  = "Log out";
-                    buttonLogout.setAttribute("name", "logout");
-                    buttonEdit = document.querySelector("nav form button[name='signup']");
-                    buttonEdit.innerText  = "Edit";
-                    buttonEdit.setAttribute("name", "edit");
-                }
+                result.innerHTML = data;
             }
         },
         error => {
@@ -72,10 +57,9 @@ async function buttonClickAuth(e) {
         });
 }
 
-try { buttonAuth === 'undefined'}
+try { buttonEdit === 'undefined'} 
 catch {
-    let buttonAuth = document.querySelector("div.form-center > form > button[type='submit']");
-    if(buttonAuth !== null) buttonAuth.addEventListener("click", buttonClickAuth);
-}
-finally { delete buttonAuth; }
-
+    let buttonEdit = document.querySelector("div.form-center > form > button[type='submit']");
+    if(buttonEdit !== null) buttonEdit.addEventListener("click", buttonClickEdit);
+} 
+finally { delete buttonEdit; }

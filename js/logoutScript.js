@@ -17,7 +17,6 @@ async function postData(url = "", data = {}) {
 let query = "/Views/Logout.php";
 postData(document.location.origin + query, JSON.stringify({"auth":"logout"}))
     .then((data) => {
-        //let jsonData = JSON.parse(data);
         if(data.auth === "success") {
             document.URL = "/";
         }

@@ -34,12 +34,25 @@ class Repository {
     function getUser(string $login, string $password) {
         $contents = file_get_contents(JSONPATH);
         $contentsDecoded = json_decode($contents, true);
-        //array_search(new User(0, "", $login, $password, ""), $contentsDecoded);
         $foundUser = Repository::searchForUser($login, $password, $contentsDecoded);
         return $foundUser;
     }
 
-    function updateUser(User $user): void {}
+    function updateUser(int $userId, User $updatedUser): void {
+        $contents = file_get_contents(JSONPATH);
+        $contentsDecoded = json_decode($contents, true);
+        foreach ($contentsDecoded as $key=>$val) {
+            if ($val['Id'] === $userId) {
+                $contentsDecoded[$key]['Login'] = $updatedUser->Login;
+                $contentsDecoded[$key]['Password'] = $updatedUser->Password;
+                $contentsDecoded[$key]['Name'] = $updatedUser->Name;
+                $contentsDecoded[$key]['Email'] = $updatedUser->Email;
+            }
+        }
+        $jsonData = json_encode($contentsDecoded);
+        file_put_contents(JSONPATH, $jsonData);
+    }
+
     function deleteUser(int $id): void {}
 }
 ?>

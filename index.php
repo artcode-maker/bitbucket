@@ -1,10 +1,5 @@
 <?php 
     session_start();
-    // if($_SESSION['is_authorized']) {
-    //     header('HTTP/1.1 301 Moved Permanently');
-    //     header('Location: /');
-    //     exit();
-    // }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,9 +19,10 @@
                     <img src="./images/logo.jpg" alt="" width="30" height="24" class="d-inline-block align-text-top">
                     Logo
                 </a>
-                <form class="d-flex">
+                <form class="d-flex" method="<?php if($_SESSION['is_authorized']) { echo "/Views/Edit.php"; } ?>">
                     <?php if($_SESSION['is_authorized']) { ?>
                     <button class="btn btn-outline-success" name="logout" value="logout">Log out</button>
+                    <button class="btn btn-outline-primary" name="edit" value="edit">Edit</button>
                     <?php } ?>
                     <?php if(!$_SESSION['is_authorized']) { ?>
                     <button class="btn btn-outline-success" name="signin" value="signin">Sign in</button>

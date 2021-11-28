@@ -30,14 +30,13 @@ function scriptLoader(name) {
         script.id = "sign";
         script.src = "/js/registrationScript.js";
         document.body.append(script);
-    } else {
-        
-        /*let script = document.querySelector("#sign");
+    } else if(name === "edit") {
+        let script = document.querySelector("#sign");
         if(script) script.remove();
         script = document.createElement('script');
         script.id = "sign";
-        script.src = "/js/logoutScript.js";
-        document.body.append(script);*/
+        script.src = "/js/editScript.js";
+        document.body.append(script);
     }
 }
 
@@ -60,6 +59,8 @@ async function buttonClick(e) {
         query = "/Views/Registration.php";
     } else if(name === "logout") {
         query = "/Views/Logout.php";
+    } else if(name === "edit") {
+        query = "/Views/Edit.php";
     }
     getData(url + query)
         .then((data) => {
@@ -69,14 +70,12 @@ async function buttonClick(e) {
                 if(name !== "logout") {
                     result.innerHTML = data;
                     result.className = "form-center";
-                    //e.target.removeEventListener("click", buttonClick);
                 }
             } else {
                 scriptLoader(name);
                 if(name !== "logout") {
                     result = document.querySelector("div[class='form-center']");
                     result.innerHTML = data;
-                    //e.target.removeEventListener("click", buttonClick);
                 }
             }
 
@@ -110,4 +109,10 @@ if(buttonSignin === null) {
 }
 
 let buttonSignup = document.querySelector("nav form button[name='signup']");
-if(buttonSignup !== null) buttonSignup.addEventListener("click", buttonClick);
+if(buttonSignup === null) {
+    // buttonSignup is for edit now
+    buttonSignup = document.querySelector("nav form button[name='edit']");
+    if(buttonSignup !== null) buttonSignup.addEventListener("click", buttonClick);
+} else {
+    buttonSignup.addEventListener("click", buttonClick);
+}

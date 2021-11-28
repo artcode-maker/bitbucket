@@ -22,4 +22,4 @@
     top: calc(50% - 200px);
 }
 
-button[name="signup"] { margin-left: 5px; }
+button[name="signup"], button[name="edit"] { margin-left: 5px; }
