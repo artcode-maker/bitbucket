@@ -3,7 +3,7 @@ async function postData(url = "", data = {}) {
         method: 'POST',
         mode: 'no-cors',
         cache: 'no-cache',        
-        credentials: 'omit',
+        credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -34,13 +34,25 @@ async function buttonClickAuth(e) {
 
     postData(document.location.origin + query, sendData)
         .then((data) => {
+            let jsonData = JSON.parse(data);
             let result = document.querySelector("div[class='logo-center']");
             if(result !== null) {
-                result.innerHTML = data;
+                result.innerHTML = jsonData['Status'];
+                if(jsonData['auth'] == true) {
+                    buttonLogout = document.querySelector("nav form button[name='signin']");
+                    buttonLogout.innerText  = "Log out";
+                    buttonLogout.setAttribute("name", "logout");
+                }
                 result.className = "form-center";
             } else {
                 result = document.querySelector("div[class='form-center']");
-                result.innerHTML = data;
+                result.innerHTML = jsonData['Status'];
+                if(jsonData['auth'] == true) {
+                    buttonLogout = document.querySelector("nav form button[name='signin']");
+                    buttonLogout.innerText  = "Log out";
+                    buttonLogout.setAttribute("name", "logout");
+                    //buttonLogout.removeEventListener("click", buttonClick);
+                }
             }
         },
         error => {

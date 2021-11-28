@@ -3,7 +3,7 @@ async function postData(url = "", data = {}) {
         method: 'POST',
         mode: 'no-cors',
         cache: 'no-cache',        
-        credentials: 'omit',
+        credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json'
         },

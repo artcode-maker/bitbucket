@@ -5,7 +5,7 @@ async function getData(url = "") {
         method: 'GET',
         mode: 'no-cors',
         cache: 'no-cache',        
-        credentials: 'omit',
+        credentials: 'same-origin',
         headers: {
             'Content-Type': 'text/html'
         },
@@ -13,6 +13,32 @@ async function getData(url = "") {
         referrerPolicy: 'no-referrer',
     });
     return await response.text();
+}
+
+function scriptLoader(name) {
+    if(name === "signin") {
+        let script = document.querySelector("#sign");
+        if(script) script.remove();
+        script = document.createElement('script');
+        script.id = "sign";
+        script.src = "/js/authScript.js";
+        document.body.append(script);
+    } else if(name === "signup") {
+        let script = document.querySelector("#sign");
+        if(script) script.remove();
+        script = document.createElement('script');
+        script.id = "sign";
+        script.src = "/js/registrationScript.js";
+        document.body.append(script);
+    } else {
+        
+        /*let script = document.querySelector("#sign");
+        if(script) script.remove();
+        script = document.createElement('script');
+        script.id = "sign";
+        script.src = "/js/logoutScript.js";
+        document.body.append(script);*/
+    }
 }
 
 async function buttonClick(e) {
@@ -30,32 +56,34 @@ async function buttonClick(e) {
     }
     if(name === "signin") {
         query = "/Views/Auth.php";
-    } else {
+    } else if(name === "signup") {
         query = "/Views/Registration.php";
+    } else if(name === "logout") {
+        query = "/Views/Logout.php";
     }
     getData(url + query)
         .then((data) => {
             let result = document.querySelector("div[class='logo-center']");
             if(result !== null) {
-                result.innerHTML = data;
-                result.className = "form-center";
+                scriptLoader(name);
+                if(name !== "logout") {
+                    result.innerHTML = data;
+                    result.className = "form-center";
+                    //e.target.removeEventListener("click", buttonClick);
+                }
             } else {
-                result = document.querySelector("div[class='form-center']");
-                result.innerHTML = data;
-                if(name === "signin") {
-                    let script = document.querySelector("#sign");
-                    if(script) script.remove();
-                    script = document.createElement('script');
-                    script.id = "sign";
-                    script.src = "/js/authScript.js";
-                    document.body.append(script);
-                } else {
-                    let script = document.querySelector("#sign");
-                    if(script) script.remove();
-                    script = document.createElement('script');
-                    script.id = "sign";
-                    script.src = "/js/registrationScript.js";
-                    document.body.append(script);
+                scriptLoader(name);
+                if(name !== "logout") {
+                    result = document.querySelector("div[class='form-center']");
+                    result.innerHTML = data;
+                    //e.target.removeEventListener("click", buttonClick);
+                }
+            }
+
+            if(name === "logout") {
+                let jsonData = JSON.parse(data);
+                if(jsonData.auth === "success") {
+                    document.location.href = "/";
                 }
             }
         },
@@ -73,7 +101,13 @@ async function buttonClick(e) {
 
 
 let buttonSignin = document.querySelector("nav form button[name='signin']");
-let buttonSignup = document.querySelector("nav form button[name='signup']");
-if(buttonSignin !== null) buttonSignin.addEventListener("click", buttonClick);
-if(buttonSignup !== null) buttonSignup.addEventListener("click", buttonClick);
+if(buttonSignin === null) {
+    // buttonSignin is for log out now
+    buttonSignin = document.querySelector("nav form button[name='logout']");
+    if(buttonSignin !== null) buttonSignin.addEventListener("click", buttonClick);
+} else {
+    buttonSignin.addEventListener("click", buttonClick);
+}
 
+let buttonSignup = document.querySelector("nav form button[name='signup']");
+if(buttonSignup !== null) buttonSignup.addEventListener("click", buttonClick);

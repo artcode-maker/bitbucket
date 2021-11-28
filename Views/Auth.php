@@ -1,10 +1,8 @@
-<?php if($_SERVER['REQUEST_METHOD'] === 'GET') {
-    if($_SESSION['is_authorized']) {
-        header('HTTP/1.1 301 Moved Permanently');
-        header('Location: /');
-        exit();
-    }
+<?php
+session_start();
+if($_SERVER['REQUEST_METHOD'] === 'GET') { 
 ?>
+
 <div class="form-center">
     <form action="<?=$_SERVER['SCRIPT_NAME']?>">
         <div class="row mb-3">
@@ -32,12 +30,12 @@
     $foundUser = $repository->getUser($json_decode['inputLogin'], $json_decode['inputPassword']);
     header('Content-type: text/html');
     if($foundUser === null) {
-        echo "Account wasn't found";
-    } else {       
-        if(!isset($_SESSION['is_authorized'])) {
+        echo json_encode(array("Status" => "Account wasn't found", "auth" => $_SESSION['is_authorized'] ));
+    } else {
+        if(!isset($_SESSION['is_authorized']) | !$_SESSION['is_authorized']) {
             $_SESSION['is_authorized'] = true;
         }
-        echo "Account was found";
+        echo json_encode(array("Status" => "Account was found", "auth" => $_SESSION['is_authorized'] ));
     }
 }
 ?>

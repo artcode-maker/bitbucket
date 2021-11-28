@@ -1,6 +1,10 @@
 <?php 
-    session_name('bitbucket');
-    session_start(); 
+    session_start();
+    // if($_SESSION['is_authorized']) {
+    //     header('HTTP/1.1 301 Moved Permanently');
+    //     header('Location: /');
+    //     exit();
+    // }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,8 +25,13 @@
                     Logo
                 </a>
                 <form class="d-flex">
+                    <?php if($_SESSION['is_authorized']) { ?>
+                    <button class="btn btn-outline-success" name="logout" value="logout">Log out</button>
+                    <?php } ?>
+                    <?php if(!$_SESSION['is_authorized']) { ?>
                     <button class="btn btn-outline-success" name="signin" value="signin">Sign in</button>
                     <button class="btn btn-outline-primary" name="signup" value="signup">Sign up</button>
+                    <?php } ?>
                 </form>
             </div>
         </nav>
