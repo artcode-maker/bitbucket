@@ -16,6 +16,7 @@ async function postData(url = "", data = {}) {
 
 async function buttonClickEdit(e) {
     e.preventDefault();
+    if(!validateForm()) return;
     let elem, spinner, query;
     elem = document.querySelector("div[class='logo-center']");
     spinner = document.querySelector("#tmplSpinner");    
@@ -36,13 +37,22 @@ async function buttonClickEdit(e) {
 
     postData(document.location.origin + query, sendData)
         .then((data) => {
+            let jsonData = JSON.parse(data);
             let result = document.querySelector("div[class='logo-center']");
             if(result !== null) {
-                result.innerHTML = data;
+                result.innerHTML = jsonData['Status'];
                 result.className = "form-center";
+                if(jsonData['auth'] === "true") {
+                    let userLogo = document.querySelector("nav form div[class='user-logo']");
+                    userLogo.textContent = "Hello, " + jsonData['name'];
+                }
             } else {
                 result = document.querySelector("div[class='form-center']");
-                result.innerHTML = data;
+                result.innerHTML = jsonData['Status'];
+                if(jsonData['auth'] === "true") {
+                    let userLogo = document.querySelector("nav form div[class='user-logo']");
+                    userLogo.textContent = "Hello, " + jsonData['name'];
+                }
             }
         },
         error => {

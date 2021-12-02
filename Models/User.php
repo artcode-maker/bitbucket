@@ -5,6 +5,7 @@ class User {
     public string $Login;
     public string $Password;
     public string $Email;
+    public bool $isDeleted = false;
 
     function __construct($Id = 0, $Name, $Login, $Password, $Email)
     {

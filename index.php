@@ -1,5 +1,11 @@
 <?php 
     session_start();
+    if($_SESSION['is_authorized']) {
+        require_once "./Models/User.php";
+        require_once "./Repository/Repository.php";
+        $repository = new Repository();
+        define("CURRENT_USER", $repository->GetUserForEdit($_SESSION['authorized_id']));
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,14 +25,16 @@
                     <img src="./images/logo.jpg" alt="" width="30" height="24" class="d-inline-block align-text-top">
                     Logo
                 </a>
-                <form class="d-flex" method="<?php if($_SESSION['is_authorized']) { echo "/Views/Edit.php"; } ?>">
+                <form class="d-flex">
                     <?php if($_SESSION['is_authorized']) { ?>
-                    <button class="btn btn-outline-success" name="logout" value="logout">Log out</button>
-                    <button class="btn btn-outline-primary" name="edit" value="edit">Edit</button>
+                        <div class="user-logo">Hello, <?php echo CURRENT_USER->Name; ?></div>
+                        <button class="btn btn-outline-success" name="logout" value="logout">Log out</button>
+                        <button class="btn btn-outline-primary" name="edit" value="edit">Edit</button>
+                        <button class="btn btn-outline-danger" name="delete" value="delete">Delete</button>
                     <?php } ?>
                     <?php if(!$_SESSION['is_authorized']) { ?>
-                    <button class="btn btn-outline-success" name="signin" value="signin">Sign in</button>
-                    <button class="btn btn-outline-primary" name="signup" value="signup">Sign up</button>
+                        <button class="btn btn-outline-success" name="signin" value="signin">Sign in</button>
+                        <button class="btn btn-outline-primary" name="signup" value="signup">Sign up</button>
                     <?php } ?>
                 </form>
             </div>

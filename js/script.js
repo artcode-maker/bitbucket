@@ -37,7 +37,20 @@ function scriptLoader(name) {
         script.id = "sign";
         script.src = "/js/editScript.js";
         document.body.append(script);
+    } else if(name === "delete") {
+        let script = document.querySelector("#sign");
+        if(script) script.remove();
+        script = document.createElement('script');
+        script.id = "sign";
+        script.src = "/js/deleteScript.js";
+        document.body.append(script);
     }
+    let validateScript = document.querySelector("#validate");
+    if(validateScript) validateScript.remove();
+    validateScript = document.createElement('script');
+    validateScript.id = "validate";
+    validateScript.src = "/js/validateForm.js";
+    document.body.append(validateScript);
 }
 
 async function buttonClick(e) {
@@ -61,19 +74,21 @@ async function buttonClick(e) {
         query = "/Views/Logout.php";
     } else if(name === "edit") {
         query = "/Views/Edit.php";
+    } else if(name === "delete") {
+        query = "/Views/Delete.php";
     }
     getData(url + query)
         .then((data) => {
             let result = document.querySelector("div[class='logo-center']");
             if(result !== null) {
                 scriptLoader(name);
-                if(name !== "logout") {
+                if(name !== "logout" && name !== "delete") {
                     result.innerHTML = data;
                     result.className = "form-center";
                 }
             } else {
                 scriptLoader(name);
-                if(name !== "logout") {
+                if(name !== "logout" && name !== "delete") {
                     result = document.querySelector("div[class='form-center']");
                     result.innerHTML = data;
                 }
@@ -82,6 +97,13 @@ async function buttonClick(e) {
             if(name === "logout") {
                 let jsonData = JSON.parse(data);
                 if(jsonData.auth === "success") {
+                    document.location.href = "/";
+                }
+            }
+            if(name === "delete") {
+                let jsonData = JSON.parse(data);
+                if(jsonData.delete === "success") {
+                    alert("Account is deleted!");
                     document.location.href = "/";
                 }
             }
@@ -116,3 +138,6 @@ if(buttonSignup === null) {
 } else {
     buttonSignup.addEventListener("click", buttonClick);
 }
+
+let buttonDelete = document.querySelector("nav form button[name='delete']");
+if(buttonDelete !== null) buttonDelete.addEventListener("click", buttonClick);

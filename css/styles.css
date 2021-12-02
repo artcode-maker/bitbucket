@@ -22,4 +22,48 @@
     top: calc(50% - 200px);
 }
 
-button[name="signup"], button[name="edit"] { margin-left: 5px; }
+button[name="signup"], button[name="edit"], button[name="logout"], button[name="delete"] { margin-left: 5px; }
+
+.user-logo {
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #dc3545;
+    text-align: center;
+    vertical-align: middle;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+}
+
+input.form-control.invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + .75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(.375em + .1875rem) center;
+    background-size: calc(.75em + .375rem) calc(.75em + .375rem);
+}
+
+input.form-control.valid {
+    border-color: #198754;
+    padding-right: calc(1.5em + .75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(.375em + .1875rem) center;
+    background-size: calc(.75em + .375rem) calc(.75em + .375rem);
+}
+
+div.invalid-feedback {
+    display: block;
+    text-align: center;
+}
+
+div.status {
+    width:300px;
+    background-color: #ffffff;
+    border: 2px solid #D4D4D4;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #A9A9A9;
+    text-align: center;
+    text-transform: uppercase;
+}

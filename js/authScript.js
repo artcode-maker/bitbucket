@@ -42,9 +42,21 @@ async function buttonClickAuth(e) {
                     buttonLogout = document.querySelector("nav form button[name='signin']");
                     buttonLogout.innerText  = "Log out";
                     buttonLogout.setAttribute("name", "logout");
-                    buttonEdit = document.querySelector("nav form button[name='signup']");
-                    buttonEdit.innerText  = "Edit";
-                    buttonEdit.setAttribute("name", "edit");
+                    buttonForEdit = document.querySelector("nav form button[name='signup']");
+                    buttonForEdit.innerText  = "Edit";
+                    buttonForEdit.setAttribute("name", "edit");
+
+                    let userLogo = document.createElement("div");
+                    userLogo.setAttribute("class", "user-logo");
+                    userLogo.textContent = "Hello, " + jsonData['name'];
+                    buttonLogout.before(userLogo);
+
+                    let deleteButton = document.createElement("button");
+                    deleteButton.className = "btn btn-outline-danger";
+                    deleteButton.setAttribute("name", "delete");
+                    deleteButton.textContent = "Delete";
+                    buttonForEdit.after(deleteButton);
+                    deleteButton.addEventListener("click", buttonClick);
                 }
                 result.className = "form-center";
             } else {
@@ -54,9 +66,21 @@ async function buttonClickAuth(e) {
                     buttonLogout = document.querySelector("nav form button[name='signin']");
                     buttonLogout.innerText  = "Log out";
                     buttonLogout.setAttribute("name", "logout");
-                    buttonEdit = document.querySelector("nav form button[name='signup']");
-                    buttonEdit.innerText  = "Edit";
-                    buttonEdit.setAttribute("name", "edit");
+                    buttonForEdit = document.querySelector("nav form button[name='signup']");
+                    buttonForEdit.innerText  = "Edit";
+                    buttonForEdit.setAttribute("name", "edit");
+
+                    let userLogo = document.createElement("div");
+                    userLogo.setAttribute("class", "user-logo");
+                    userLogo.textContent = "Hello, " + jsonData['name'];
+                    buttonLogout.before(userLogo);
+
+                    let deleteButton = document.createElement("button");
+                    deleteButton.className = "btn btn-outline-danger";
+                    deleteButton.setAttribute("name", "delete");
+                    deleteButton.textContent = "Delete";
+                    buttonForEdit.after(deleteButton);
+                    deleteButton.addEventListener("click", buttonClick);
                 }
             }
         },

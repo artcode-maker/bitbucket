@@ -1,17 +1,26 @@
 <?php
-define("JSONPATH", "../Repository/database.json");
+define("JSONPATH", __DIR__."/database.json");
 class Repository {
-    private static function GetLastId(): int {
-        $jsonData = file(JSONPATH);
-        $data = json_encode($jsonData, JSON_UNESCAPED_UNICODE);
-        $id = (int)array_values(json_decode($data, true));
-        return $id;
+    public function GetUserForEdit(int $userId) {
+        $contents = file_get_contents(JSONPATH);
+        $contentsDecoded = json_decode($contents, true);
+        foreach ($contentsDecoded as $key => $val) {
+            if ($val['Id'] === $userId) {
+                $user = new User($contentsDecoded[$key]['Id'],
+                                $contentsDecoded[$key]['Name'], 
+                                $contentsDecoded[$key]['Login'],
+                                "",
+                                $contentsDecoded[$key]['Email']);
+                return $user;
+            }
+        }
+        return null;
     }
 
-    private static function searchForUser($login, $password, $array) {
+    private function searchForUser($login, $password, $array) {
         foreach ($array as $val) {
             if ($val['Login'] === $login) {
-                if($val['Password'] === $password) {
+                if(self::DecryptPassword($val['Password'], $password) && !$val['isDeleted']) {
                     return $val;
                 } else {
                     return null;
@@ -26,6 +35,7 @@ class Repository {
         $contentsDecoded = json_decode($contents, true);
         $lastUser = end($contentsDecoded);
         $newUser->Id = $lastUser['Id'] + 1;
+        $newUser->Password = $this->EncryptPassword($newUser->Password);
         array_push($contentsDecoded, $newUser);
         $jsonData = json_encode($contentsDecoded);
         file_put_contents(JSONPATH, $jsonData);
@@ -34,7 +44,7 @@ class Repository {
     function getUser(string $login, string $password) {
         $contents = file_get_contents(JSONPATH);
         $contentsDecoded = json_decode($contents, true);
-        $foundUser = Repository::searchForUser($login, $password, $contentsDecoded);
+        $foundUser = $this->searchForUser($login, $password, $contentsDecoded);
         return $foundUser;
     }
 
@@ -44,7 +54,7 @@ class Repository {
         foreach ($contentsDecoded as $key=>$val) {
             if ($val['Id'] === $userId) {
                 $contentsDecoded[$key]['Login'] = $updatedUser->Login;
-                $contentsDecoded[$key]['Password'] = $updatedUser->Password;
+                $contentsDecoded[$key]['Password'] = self::EncryptPassword($updatedUser->Password);
                 $contentsDecoded[$key]['Name'] = $updatedUser->Name;
                 $contentsDecoded[$key]['Email'] = $updatedUser->Email;
             }
@@ -53,6 +63,28 @@ class Repository {
         file_put_contents(JSONPATH, $jsonData);
     }
 
-    function deleteUser(int $id): void {}
+    function deleteUser(int $userId): void {
+        $contents = file_get_contents(JSONPATH);
+        $contentsDecoded = json_decode($contents, true);
+        foreach ($contentsDecoded as $key=>$val) {
+            if ($val['Id'] === $userId) {
+                $contentsDecoded[$key]['isDeleted'] = true;
+            }
+        }
+        $jsonData = json_encode($contentsDecoded);
+        file_put_contents(JSONPATH, $jsonData);
+    }
+
+    static private function EncryptPassword(string $Password): string {
+        $options = [
+            'salt' => "gg3434%@3",
+            'cost' => 12,
+        ];
+        return password_hash($Password, PASSWORD_BCRYPT, $options);
+    }
+
+    static private function DecryptPassword(string $hash, string $password): bool {
+        return password_verify($password, $hash);
+    }
 }
 ?>
