@@ -20,7 +20,8 @@ async function buttonClickRegistartion(e) {
     elem = document.querySelector("div[class='logo-center']");
     spinner = document.querySelector("#tmplSpinner");    
     query = "/Views/Registration.php";
-    if(!validateForm()) return;
+    let isValid = await validateForm(true);
+    if(!isValid) return;
     let sendData = {};
     sendData.inputLogin = document.querySelector("input[name='inputLogin']").value;
     sendData.inputPassword = document.querySelector("input[name='inputPassword']").value;

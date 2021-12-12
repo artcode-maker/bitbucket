@@ -1,4 +1,4 @@
-function validateForm() {
+async function validateForm(isRegistration) {
     let formInputs = document.querySelectorAll("div[class='form-center'] form > div > div > input");
     let isPassedValidation = true;
 
@@ -26,10 +26,71 @@ function validateForm() {
         }
     }
 
+    if(isPassedValidation && isRegistration) {
+        login = document.querySelector("input[name='inputLogin']");
+        email = document.querySelector("input[name='inputEmail']");
+        query = "/Views/CheckRegistration.php";
+        let sendData = {};
+        sendData.inputLogin = document.querySelector("input[name='inputLogin']").value;
+        sendData.inputEmail = document.querySelector("input[name='inputEmail']").value;
+        await isRegistred(document.location.origin + query, sendData)
+            .then((data) => {
+                let jsonData = null;
+                try {
+                    jsonData = JSON.parse(data);
+                } catch {
+                    //
+                }
+                if(jsonData !== null) {
+                    if(jsonData.loginExists) {
+                        login.classList.add("invalid");
+                        if(login.classList.contains("valid")) login.classList.remove("valid");
+                        alert("Login is not availible");
+                        isPassedValidation = false;
+                        return;
+                    } else if(login.classList.contains("invalid")) {
+                        login.classList.remove("invalid");
+                        if(login.classList.contains("valid")) login.classList.add("valid");
+                    }
+    
+                    if(jsonData.emailExists) {
+                        email.classList.add("invalid");
+                        if(email.classList.contains("valid")) email.classList.remove("valid");
+                        alert("Email is not availible");
+                        isPassedValidation = false;
+                        return;
+                    } else if(email.classList.contains("invalid")) {
+                        email.classList.remove("invalid");
+                        if(email.classList.contains("valid")) email.classList.add("valid");
+                    }
+                }
+
+            },
+            error => {
+                //
+            });
+    }
+
     return isPassedValidation;
 }
 
-// 1 arg - array of errors, 2 arg - error, 3 arg - error message, 4arg - options, 5 arg - add (true) of delete (false)
+async function isRegistred(url = "", data = {}) {
+    const response = await fetch(url, {
+        method: 'POST',
+        mode: 'no-cors',
+        cache: 'no-cache',        
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify(data)
+    });
+    return await response.text();
+}
+
+// 1 arg - array of errors, 2 arg - error, 3 arg - error message, 4arg - options, 5 arg - add (true) or delete (false)
 function toggleValidation(arrOfErrors, error, errMsg, options, isAdd) {
     if(isAdd) {
         error.messageArray.push(errMsg);
@@ -143,8 +204,8 @@ function inputValidator(input, options) {
             setOfErrors = toggleValidation(setOfErrors, error, errorMessage, options, false);
         }
 
-        errorMessage = "Min length is 5";
-        if(input.value.length <= 4) {
+        errorMessage = "Min length is 6";
+        if(input.value.length <= 5) {
             setOfErrors = toggleValidation(setOfErrors, error, errorMessage, options, true);
         } else {
             setOfErrors = toggleValidation(setOfErrors, error, errorMessage, options, false);
@@ -159,8 +220,8 @@ function inputValidator(input, options) {
         }
 
         // Has special character
-        errorMessage = "Password should have at least one special character";
-        if(!(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(input.value))) {
+        errorMessage = "Password should have at least one special character, one digit and one letter";
+        if(!(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]/.test(input.value))) {
             setOfErrors = toggleValidation(setOfErrors, error, errorMessage, options, true);
         } else {
             setOfErrors = toggleValidation(setOfErrors, error, errorMessage, options, false);
@@ -240,7 +301,7 @@ function inputValidator(input, options) {
 
         // Correct email address
         errorMessage = "Input correct email address";
-        if(!/\S+@\S+\.\S+/.test(input.value)) {
+        if(!/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(input.value)) {
             setOfErrors = toggleValidation(setOfErrors, error, errorMessage, options, true);
         } else {
             setOfErrors = toggleValidation(setOfErrors, error, errorMessage, options, false);

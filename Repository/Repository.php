@@ -48,6 +48,29 @@ class Repository {
         return $foundUser;
     }
 
+    function checkForLogin(string $login) {
+        $contents = file_get_contents(JSONPATH);
+        $contentsDecoded = json_decode($contents, true);
+        foreach ($contentsDecoded as $val) {
+            if ($val['Login'] === $login) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function checkForEmail(string $email) {
+        $contents = file_get_contents(JSONPATH);
+        $contentsDecoded = json_decode($contents, true);
+        foreach ($contentsDecoded as $val) {
+            if ($val['Email'] === $email) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+
     function updateUser(int $userId, User $updatedUser): void {
         $contents = file_get_contents(JSONPATH);
         $contentsDecoded = json_decode($contents, true);

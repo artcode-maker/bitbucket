@@ -32,7 +32,7 @@ if($_SERVER['REQUEST_METHOD'] === 'GET') {
     $foundUser = $repository->getUser($json_decode['inputLogin'], $json_decode['inputPassword']);
     header('Content-type: text/html');
     if($foundUser === null) {
-        echo json_encode(array("Status" => "Account wasn't found", "auth" => $_SESSION['is_authorized'] ));
+        echo json_encode(array("Status" => "<div class='status'>Account wasn't found</div>", "auth" => $_SESSION['is_authorized'] ));
     } else {
         if(!isset($_SESSION['is_authorized']) | !$_SESSION['is_authorized']) {
             $_SESSION['is_authorized'] = true;
