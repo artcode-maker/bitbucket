@@ -16,6 +16,8 @@ async function postData(url = "", data = {}) {
 
 async function buttonClickAuth(e) {
     e.preventDefault();
+    let isValid = await validateForm(false);
+    if(!isValid) return;
     let elem, spinner, query;
     query = "/Views/Auth.php";
     elem = document.querySelector("div[class='logo-center']");

@@ -16,7 +16,8 @@ async function postData(url = "", data = {}) {
 
 async function buttonClickEdit(e) {
     e.preventDefault();
-    if(!validateForm(false)) return;
+    let isValid = await validateForm(false);
+    if(!isValid) return;
     let elem, spinner, query;
     elem = document.querySelector("div[class='logo-center']");
     spinner = document.querySelector("#tmplSpinner");    
